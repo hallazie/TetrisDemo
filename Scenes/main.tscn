@@ -40,20 +40,66 @@ stretch_mode = 1
 script = ExtResource("4_yatxc")
 tetromino_scene = ExtResource("5_j0sar")
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="NextTetro" type="PanelContainer" parent="."]
 custom_minimum_size = Vector2(200, 100)
-offset_left = -100.0
-offset_top = -631.0
-offset_right = 100.0
-offset_bottom = -531.0
+offset_left = 40.0
+offset_top = -621.0
+offset_right = 240.0
+offset_bottom = -521.0
 
-[node name="Label" type="Label" parent="PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="NextTetro"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="Label" type="Label" parent="NextTetro/MarginContainer"]
 layout_mode = 2
 size_flags_vertical = 0
 text = "NEXT TETROMINO:"
 horizontal_alignment = 1
 
+[node name="ScoreBoard" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(200, 100)
+offset_left = -224.0
+offset_top = -621.0
+offset_right = -24.0
+offset_bottom = -521.0
+
+[node name="MarginContainer" type="MarginContainer" parent="ScoreBoard"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScoreBoard/MarginContainer"]
+layout_mode = 2
+
+[node name="PersonalBestTitle" type="Label" parent="ScoreBoard/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "PersonalBest:"
+
+[node name="PersonalBestScore" type="Label" parent="ScoreBoard/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "0
+"
+
+[node name="CurrentTitle" type="Label" parent="ScoreBoard/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "CurrentScore:"
+
+[node name="CurrentScore" type="Label" parent="ScoreBoard/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "0"
+
 [node name="PieceSpawner" type="Node" parent="."]
 script = ExtResource("3_ygpth")
 
 [node name="UI" parent="." instance=ExtResource("6_5ie2u")]
+visible = false
