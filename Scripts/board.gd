@@ -22,6 +22,11 @@ var next_tetromino
 var tetrominos: Array[Tetromino] = []
 @export var tetromino_scene: PackedScene
 
+
+func _ready() -> void:
+    reset_score()
+
+
 func spawn_tetromino(type: Shared.Tetromino, is_next_piece, spawn_position):
     var tetromino_data = Shared.data[type]
     var tetromino = tetromino_scene.instantiate() as Tetromino
@@ -51,11 +56,20 @@ func on_tetromino_locked(tetromino: Tetromino):
     check_game_over()
 
     
+func reset_score():
+    Vars.current_score = 0
+    personal_best_score = Vars.highest_score
+    personal_best_label.text = str(personal_best_score)
+    
+    
 func check_game_over():
         for piece in get_all_pieces():
             var y_location = piece.global_position.y
             if y_location == -456:
                 game_over.emit()
+                Vars.update_highest_score()
+                reset_score()
+                
     
 func add_tetromino_to_lines(tetromino: Tetromino):
     var tetromino_pieces = tetromino.get_children().filter(func (c): return c is Piece)
@@ -98,6 +112,7 @@ func remove_full_lines():
         current_score += 1200
     else:
         current_score += 1200
+    Vars.current_score = current_score
     current_score_label.text = str(current_score)
     
 

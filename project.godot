@@ -18,6 +18,8 @@ config/icon="res://Assets/icon.svg"
 [autoload]
 
 Shared="*res://Scripts/shared.gd"
+EthTool="*res://Scripts/eth_tool.gd"
+Vars="*res://Scripts/vars.gd"
 
 [display]
 

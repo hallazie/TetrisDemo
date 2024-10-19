@@ -32,4 +32,8 @@ func _on_button_pressed():
 
 
 func _on_menu_pressed() -> void:
+    Vars.update_highest_score()
+    for child in get_tree().root.get_children():
+        if child.name.begins_with("@Node") or child.name.begins_with("ghost"):
+            child.queue_free()
     get_tree().change_scene_to_file("res://Scenes/menu.tscn")
