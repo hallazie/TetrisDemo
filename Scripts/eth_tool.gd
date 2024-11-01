@@ -10,231 +10,237 @@ const NODE_RPC_URL := "https://snowy-capable-wave.optimism-sepolia.quiknode.pro/
 
 # 上传用户成绩，对应智能合约中的 uploadScore 函数
 func upload_score(username, score, prikey):
+	await get_tree().create_timer(2.0).timeout
 	# create a new instance of the ABIHelper class and unmarshal the ABI JSON string into it
-	var h = ABIHelper.new()
-	var res = h.unmarshal_from_json(CONTRACT_ABI)
-	if !res:
-		print("unmarshal_from_json failed!")
-		return
-
-	var params = [
-		username,
-		score
-	]
-	var packed = h.pack("uploadScore", params)
-
-	# get Optimism instance and set rpc url
-	var op = Optimism.new()
-	op.set_rpc_url(NODE_RPC_URL)
-	# set private key for sign tx
-	var secp256k1 = op.get_secp256k1_wrapper()
-	assert(secp256k1.set_secret_key(prikey), "set_secret_key failed!")
-	var block_number = BigInt.new()
-	block_number.from_string("0")
-
-	var ethaccount_manager = EthAccountManager.new()
-	var ethaccount = ethaccount_manager.from_private_key(prikey.hex_decode())
-	var address = "0x" + ethaccount.get_address().hex_encode()
-
-	var get_nonce = op.nonce_at(address, block_number)
-	print("get_nonce: ", get_nonce)
-
-	# create a legacyTx
-	var legacyTx = LegacyTx.new()
-	legacyTx.set_nonce(get_nonce)
-	# todo: write a function to get gas price & gas limit
-	var gas_price = op.suggest_gas_price()
-	legacyTx.set_gas_price(gas_price)
-	legacyTx.set_gas_limit(828516)
-	var value = BigInt.new()
-	value.from_string("0")
-	legacyTx.set_value(value)
-	legacyTx.set_data(packed)
-
-	var chain_id = BigInt.new()
-	chain_id.from_string("11155420")
-	legacyTx.set_chain_id(chain_id)
-	legacyTx.set_to_address(CONTRACT_ADDRESS)
-
-	# sign tx
-	var sign_result = legacyTx.sign_tx(secp256k1)
-	assert(sign_result == 0, "sign tx failed!")
-
-	## marshal binary
-	var send_tx_data = legacyTx.signedtx_marshal_binary()
-
-	var rpc_result = op.send_transaction(send_tx_data)
-	# example rpc_result:  { "success": true, "errmsg": "", "txhash": "0xe3b18398db6371a47c1795f4a09ab412ddeceaa29ffda3d5dbae514a99e6caed" }
-	if rpc_result["success"] == false:
-		print("rpc reqeust failed! errmsg: ", rpc_result["errmsg"])
-		return
-	var tx_hash = rpc_result["txhash"]
-	print("tx_hash: ", tx_hash)
-	return tx_hash
+	#var h = ABIHelper.new()
+	#var res = h.unmarshal_from_json(CONTRACT_ABI)
+	#if !res:
+		#print("unmarshal_from_json failed!")
+		#return
+#
+	#var params = [
+		#username,
+		#score
+	#]
+	#var packed = h.pack("uploadScore", params)
+#
+	## get Optimism instance and set rpc url
+	#var op = Optimism.new()
+	#op.set_rpc_url(NODE_RPC_URL)
+	## set private key for sign tx
+	#var secp256k1 = op.get_secp256k1_wrapper()
+	#assert(secp256k1.set_secret_key(prikey), "set_secret_key failed!")
+	#var block_number = BigInt.new()
+	#block_number.from_string("0")
+#
+	#var ethaccount_manager = EthAccountManager.new()
+	#var ethaccount = ethaccount_manager.from_private_key(prikey.hex_decode())
+	#var address = "0x" + ethaccount.get_address().hex_encode()
+#
+	#var get_nonce = op.nonce_at(address, block_number)
+	#print("get_nonce: ", get_nonce)
+#
+	## create a legacyTx
+	#var legacyTx = LegacyTx.new()
+	#legacyTx.set_nonce(get_nonce)
+	## todo: write a function to get gas price & gas limit
+	#var gas_price = op.suggest_gas_price()
+	#legacyTx.set_gas_price(gas_price)
+	#legacyTx.set_gas_limit(828516)
+	#var value = BigInt.new()
+	#value.from_string("0")
+	#legacyTx.set_value(value)
+	#legacyTx.set_data(packed)
+#
+	#var chain_id = BigInt.new()
+	#chain_id.from_string("11155420")
+	#legacyTx.set_chain_id(chain_id)
+	#legacyTx.set_to_address(CONTRACT_ADDRESS)
+#
+	## sign tx
+	#var sign_result = legacyTx.sign_tx(secp256k1)
+	#assert(sign_result == 0, "sign tx failed!")
+#
+	### marshal binary
+	#var send_tx_data = legacyTx.signedtx_marshal_binary()
+#
+	#var rpc_result = op.send_transaction(send_tx_data)
+	## example rpc_result:  { "success": true, "errmsg": "", "txhash": "0xe3b18398db6371a47c1795f4a09ab412ddeceaa29ffda3d5dbae514a99e6caed" }
+	#if rpc_result["success"] == false:
+		#print("rpc reqeust failed! errmsg: ", rpc_result["errmsg"])
+		#return
+	#var tx_hash = rpc_result["txhash"]
+	#print("tx_hash: ", tx_hash)
+	#return tx_hash
+	return ""
 
 # 上传用户成绩，对应智能合约中的 uploadScore 函数
 # 第二种实现方式，使用 signed_transaction 函数。更加简洁。
 func upload_score2(username, score, prikey):
-    # create a new instance of the ABIHelper class and unmarshal the ABI JSON string into it
-    var h = ABIHelper.new()
-    var res = h.unmarshal_from_json(CONTRACT_ABI)
-    if !res:
-        print("unmarshal_from_json failed!")
-        return
-
-    var params = [
-        username,
-        score
-    ]
-    var packed = h.pack("uploadScore", params)
-
-    # get Optimism instance and set rpc url
-    var op = Optimism.new()
-    op.set_rpc_url(NODE_RPC_URL)
-    var ethaccount_manager = EthAccountManager.new()
-    var ethaccount = ethaccount_manager.from_private_key(prikey.hex_decode())
-    op.set_eth_account(ethaccount)
-    var transaction = {
-        "to": CONTRACT_ADDRESS,
-        "data": packed,
-    }
-    var signed_tx_data = op.signed_transaction(transaction)
-    var rpc_result = op.send_transaction(signed_tx_data)
-    print("rpc_result: ", rpc_result)
-    # example rpc_result:  { "success": true, "errmsg": "", "txhash": "0xe3b18398db6371a47c1795f4a09ab412ddeceaa29ffda3d5dbae514a99e6caed" }
-    if rpc_result["success"] == false:
-        print("rpc reqeust failed! errmsg: ", rpc_result["errmsg"])
-        return
-    var tx_hash = rpc_result["txhash"]
-    print("tx_hash: ", tx_hash)
-    return tx_hash
+	## create a new instance of the ABIHelper class and unmarshal the ABI JSON string into it
+	#var h = ABIHelper.new()
+	#var res = h.unmarshal_from_json(CONTRACT_ABI)
+	#if !res:
+		#print("unmarshal_from_json failed!")
+		#return
+#
+	#var params = [
+		#username,
+		#score
+	#]
+	#var packed = h.pack("uploadScore", params)
+#
+	## get Optimism instance and set rpc url
+	#var op = Optimism.new()
+	#op.set_rpc_url(NODE_RPC_URL)
+	#var ethaccount_manager = EthAccountManager.new()
+	#var ethaccount = ethaccount_manager.from_private_key(prikey.hex_decode())
+	#op.set_eth_account(ethaccount)
+	#var transaction = {
+		#"to": CONTRACT_ADDRESS,
+		#"data": packed,
+	#}
+	#var signed_tx_data = op.signed_transaction(transaction)
+	#var rpc_result = op.send_transaction(signed_tx_data)
+	#print("rpc_result: ", rpc_result)
+	## example rpc_result:  { "success": true, "errmsg": "", "txhash": "0xe3b18398db6371a47c1795f4a09ab412ddeceaa29ffda3d5dbae514a99e6caed" }
+	#if rpc_result["success"] == false:
+		#print("rpc reqeust failed! errmsg: ", rpc_result["errmsg"])
+		#return
+	#var tx_hash = rpc_result["txhash"]
+	#print("tx_hash: ", tx_hash)
+	#return tx_hash
+	return ""
 
 
 # 获取用户最高分数，对应智能合约中的 getBestScore 函数
 func get_best_score(username):
-    # create a new instance of the ABIHelper class and unmarshal the ABI JSON string into it
-    var h = ABIHelper.new()
-    var res = h.unmarshal_from_json(CONTRACT_ABI)
-    if !res:
-        print("unmarshal_from_json failed!")
-        return []
-
-    var packed = h.pack("getBestScore", [username])
-
-    var op = Optimism.new()
-    op.set_rpc_url(NODE_RPC_URL)
-    var call_msg = {
-        "from": "0x0000000000000000000000000000000000000000",
-        "to": CONTRACT_ADDRESS,
-        "input": "0x" + packed.hex_encode(),
-    }
-    var rpc_resp = op.call_contract(call_msg, "")
-    print("gd: origin rpc_result: ", rpc_resp)
-    print("gd: rpc_result: ", rpc_resp["response_body"])
-
-    var call_result = JSON.parse_string(rpc_resp["response_body"])
-
-    # create a new instance of the ABIHelper class and unmarshal the ABI JSON string into it
-    var call_ret = call_result["result"]
-    call_ret = call_ret.substr(2, call_ret.length() - 2)
-    print("getBestScore. gd call ret: ", call_ret)
-    print("========= unpack to dictionary ==============\n")
-    var result = []
-    var err = h.unpack_into_array("getBestScore", call_ret.hex_decode(), result)
-    if err != OK:
-        assert(false, "unpack_into_dictionary failed!")
-    print("call result: ", result)
-    # exmaple result: [false, "0"]
-    return result
+	## create a new instance of the ABIHelper class and unmarshal the ABI JSON string into it
+	#var h = ABIHelper.new()
+	#var res = h.unmarshal_from_json(CONTRACT_ABI)
+	#if !res:
+		#print("unmarshal_from_json failed!")
+		#return []
+#
+	#var packed = h.pack("getBestScore", [username])
+#
+	#var op = Optimism.new()
+	#op.set_rpc_url(NODE_RPC_URL)
+	#var call_msg = {
+		#"from": "0x0000000000000000000000000000000000000000",
+		#"to": CONTRACT_ADDRESS,
+		#"input": "0x" + packed.hex_encode(),
+	#}
+	#var rpc_resp = op.call_contract(call_msg, "")
+	#print("gd: origin rpc_result: ", rpc_resp)
+	#print("gd: rpc_result: ", rpc_resp["response_body"])
+#
+	#var call_result = JSON.parse_string(rpc_resp["response_body"])
+#
+	## create a new instance of the ABIHelper class and unmarshal the ABI JSON string into it
+	#var call_ret = call_result["result"]
+	#call_ret = call_ret.substr(2, call_ret.length() - 2)
+	#print("getBestScore. gd call ret: ", call_ret)
+	#print("========= unpack to dictionary ==============\n")
+	#var result = []
+	#var err = h.unpack_into_array("getBestScore", call_ret.hex_decode(), result)
+	#if err != OK:
+		#assert(false, "unpack_into_dictionary failed!")
+	#print("call result: ", result)
+	## exmaple result: [false, "0"]
+	#return result
+	return 9990
 
 # 获取前100名的分数，对应智能合约中的 getTopScores 函数
 func get_top_scores():
-    # create a new instance of the ABIHelper class and unmarshal the ABI JSON string into it
-    var h = ABIHelper.new()
-    var res = h.unmarshal_from_json(CONTRACT_ABI)
-    if !res:
-        print("unmarshal_from_json failed!")
-        return []
-
-    var packed = h.pack("getTopScores", [])
-
-    var op = Optimism.new()
-    op.set_rpc_url(NODE_RPC_URL)
-    var call_msg = {
-        "from": "0x0000000000000000000000000000000000000000",
-        "to": CONTRACT_ADDRESS,
-        "input": "0x" + packed.hex_encode(),
-    }
-    var rpc_resp = op.call_contract(call_msg, "")
-    print("gd: origin rpc_result: ", rpc_resp)
-    print("gd: rpc_result: ", rpc_resp["response_body"])
-
-    var call_result = JSON.parse_string(rpc_resp["response_body"])
-
-    # create a new instance of the ABIHelper class and unmarshal the ABI JSON string into it
-    var call_ret = call_result["result"]
-    call_ret = call_ret.substr(2, call_ret.length() - 2)
-    print("getBestScore. gd call ret: ", call_ret)
-    print("========= unpack to dictionary ==============\n")
-    var result = []
-    var err = h.unpack_into_array("getTopScores", call_ret.hex_decode(), result)
-    if err != OK:
-        assert(false, "unpack_into_dictionary failed!")
-    print("call result: ", result)
-    # exmaple result: [[["zfer", "420"], ["cooper", "100"]]]
-    return result
+	## create a new instance of the ABIHelper class and unmarshal the ABI JSON string into it
+	#var h = ABIHelper.new()
+	#var res = h.unmarshal_from_json(CONTRACT_ABI)
+	#if !res:
+		#print("unmarshal_from_json failed!")
+		#return []
+#
+	#var packed = h.pack("getTopScores", [])
+#
+	#var op = Optimism.new()
+	#op.set_rpc_url(NODE_RPC_URL)
+	#var call_msg = {
+		#"from": "0x0000000000000000000000000000000000000000",
+		#"to": CONTRACT_ADDRESS,
+		#"input": "0x" + packed.hex_encode(),
+	#}
+	#var rpc_resp = op.call_contract(call_msg, "")
+	#print("gd: origin rpc_result: ", rpc_resp)
+	#print("gd: rpc_result: ", rpc_resp["response_body"])
+#
+	#var call_result = JSON.parse_string(rpc_resp["response_body"])
+#
+	## create a new instance of the ABIHelper class and unmarshal the ABI JSON string into it
+	#var call_ret = call_result["result"]
+	#call_ret = call_ret.substr(2, call_ret.length() - 2)
+	#print("getBestScore. gd call ret: ", call_ret)
+	#print("========= unpack to dictionary ==============\n")
+	#var result = []
+	#var err = h.unpack_into_array("getTopScores", call_ret.hex_decode(), result)
+	#if err != OK:
+		#assert(false, "unpack_into_dictionary failed!")
+	#print("call result: ", result)
+	## exmaple result: [[["zfer", "420"], ["cooper", "100"]]]
+	#return result
+	return [Record.new("zfer", 420, 1), Record.new("cooper", 100, 2)]
 
 
 class Record:
-    var name: String = ""
-    var score: int = 0
-    var index: int = 0
+	var name: String = ""
+	var score: int = 0
+	var index: int = 0
 
-    func _init(name, score):
-        self.name = name
-        self.score = score
+	func _init(name, score, index=0):
+		self.name = name
+		self.score = score
+		self.index = index
 
 
 func check_username_available(username):
-    """
-    检查用户名是否已经被占用，用于进行唯一的全局排名
-    """
-    # TODO change this
-    return randi_range(0, 10) < 5
-        
+	"""
+	检查用户名是否已经被占用，用于进行唯一的全局排名
+	"""
+	# TODO change this
+	return randi_range(0, 10) < 5
+		
 
 func sync_leaderboard():
-    """
-    从链上同步战绩，只返回前100名
-    """
-    # TODO change this to get record_list from chain
-    
-    # -------------------------------------------
-    var alphabet = "qwertyuiopasdfghjklzxcvbnm".split()
-    print(alphabet)
-    var record_list = []
-    for i in range(100):
-        var name = ""
-        for ii in range(randi_range(5, 10)):
-            name += alphabet[randi_range(0, 25)]
-        var score = randi_range(10, 100) * 10
-        print(name)
-        record_list.append(Record.new(name, score))
-    record_list.append(Record.new(Vars.username, Vars.highest_score))
-    # -------------------------------------------
-    
-    record_list.sort_custom(func(a, b): return a.score > b.score)
-    record_list = record_list.slice(0, 100)
-    for i in range(len(record_list)):
-        record_list[i].index = i + 1
-    return record_list
-    
-    
+	"""
+	从链上同步战绩，只返回前100名
+	"""
+	# TODO change this to get record_list from chain
+	
+	# -------------------------------------------
+	var alphabet = "qwertyuiopasdfghjklzxcvbnm".split()
+	print(alphabet)
+	var record_list = []
+	for i in range(100):
+		var name = ""
+		for ii in range(randi_range(5, 10)):
+			name += alphabet[randi_range(0, 25)]
+		var score = randi_range(10, 100) * 10
+		print(name)
+		record_list.append(Record.new(name, score))
+	record_list.append(Record.new(Vars.username, Vars.highest_score))
+	# -------------------------------------------
+	
+	record_list.sort_custom(func(a, b): return a.score > b.score)
+	record_list = record_list.slice(0, 100)
+	for i in range(len(record_list)):
+		record_list[i].index = i + 1
+	return record_list
+	
+	
 func update_user_score(username, score):
-    """
-    将用户的最高分数同步到链上 
-    """
-    pass
+	"""
+	将用户的最高分数同步到链上 
+	"""
+	pass
 
-    
-    
+	
+	

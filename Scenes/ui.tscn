@@ -35,9 +35,15 @@ text = "GAME OVER"
 layout_mode = 2
 text = "RESTART"
 
+[node name="Submit" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Submit to Leaderboard
+"
+
 [node name="Menu" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Menu"
 
 [connection signal="pressed" from="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Restart" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Submit" to="." method="_on_submit_pressed"]
 [connection signal="pressed" from="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Menu" to="." method="_on_menu_pressed"]

@@ -1,9 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://cla8vdpmauap2"]
+[gd_scene load_steps=2 format=3 uid="uid://dyyf2pfwmks0h"]
 
-[ext_resource type="Script" path="res://Scripts/login.gd" id="1_ammr0"]
+[ext_resource type="Script" path="res://Scripts/logout.gd" id="1_a517f"]
 
 [node name="login" type="Node"]
-script = ExtResource("1_ammr0")
+script = ExtResource("1_a517f")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 
@@ -44,31 +44,20 @@ offset_right = 284.0
 offset_bottom = 488.0
 theme_override_constants/separation = 16
 
-[node name="Label" type="Label" parent="Control/PanelContainer/MarginContainer/Control/VBoxContainer"]
-layout_mode = 2
-text = "Current User: None"
-
 [node name="Declear" type="Label" parent="Control/PanelContainer/MarginContainer/Control/VBoxContainer"]
 layout_mode = 2
-text = "The PrivateKey will only store at local for submitting your best score to leaderboard purpose. You can delete this using Logout after you Login."
+text = "Are you sure you want to logout and delete local stored private key and local stored best score?"
 autowrap_mode = 2
 
-[node name="TextEdit" type="TextEdit" parent="Control/PanelContainer/MarginContainer/Control/VBoxContainer"]
-custom_minimum_size = Vector2(0, 52)
-layout_mode = 2
-placeholder_text = "Username"
-wrap_mode = 1
-
-[node name="PrivateKeyInput" type="TextEdit" parent="Control/PanelContainer/MarginContainer/Control/VBoxContainer"]
-custom_minimum_size = Vector2(0, 52)
-layout_mode = 2
-placeholder_text = "PrivateKey"
-wrap_mode = 1
-autowrap_mode = 1
-
-[node name="Submit" type="Button" parent="Control/PanelContainer/MarginContainer/Control/VBoxContainer"]
+[node name="Confirm" type="Button" parent="Control/PanelContainer/MarginContainer/Control/VBoxContainer"]
 custom_minimum_size = Vector2(284, 52)
 layout_mode = 2
-text = "Submit"
+text = "Confirm"
 
-[connection signal="pressed" from="Control/PanelContainer/MarginContainer/Control/VBoxContainer/Submit" to="." method="_on_submit_pressed"]
+[node name="Return" type="Button" parent="Control/PanelContainer/MarginContainer/Control/VBoxContainer"]
+custom_minimum_size = Vector2(284, 52)
+layout_mode = 2
+text = "Return"
+
+[connection signal="pressed" from="Control/PanelContainer/MarginContainer/Control/VBoxContainer/Confirm" to="." method="_on_confirm_pressed"]
+[connection signal="pressed" from="Control/PanelContainer/MarginContainer/Control/VBoxContainer/Return" to="." method="_on_return_pressed"]

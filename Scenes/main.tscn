@@ -80,7 +80,7 @@ layout_mode = 2
 [node name="PersonalBestTitle" type="Label" parent="ScoreBoard/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 0
-text = "PersonalBest:"
+text = "Personal Best:"
 
 [node name="PersonalBestScore" type="Label" parent="ScoreBoard/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -91,7 +91,7 @@ text = "0
 [node name="CurrentTitle" type="Label" parent="ScoreBoard/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 0
-text = "CurrentScore:"
+text = "Current Score:"
 
 [node name="CurrentScore" type="Label" parent="ScoreBoard/MarginContainer/VBoxContainer"]
 layout_mode = 2
