@@ -10,7 +10,7 @@ func _ready() -> void:
         login_button.text = "Logout"
         welcome_label.text = "Welcome, " + Vars.username + "!"
     else:
-        welcome_label.text = "Please create a username"
+        welcome_label.text = "Please create a username or login by private key"
 
 
 func _on_play_pressed() -> void:

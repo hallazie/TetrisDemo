@@ -1,7 +1,8 @@
 extends Node
 
 
-@onready var container = $Control/PanelContainer/MarginContainer/ScrollContainer/VBoxContainer
+@onready var container = $Control/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer
+@onready var return_button = $Control/PanelContainer/MarginContainer/VBoxContainer/Button
 
 
 func _ready() -> void:
@@ -9,6 +10,8 @@ func _ready() -> void:
         container.remove_child(child)
     #var record_list = EthTool.sync_leaderboard()
     var record_list = []
+    #for i in range(100):
+        #record_list.append(EthTool.Record.new(str(i), i))
     var record_chain_list = await EthTool.get_top_scores()
     if len(record_chain_list) > 0:
         var record_dict = {}
@@ -19,8 +22,8 @@ func _ready() -> void:
                 record_dict[record_chain[0]] = max(record_dict[record_chain[0]], int(record_chain[1]))
         for item in record_dict:
             record_list.append(EthTool.Record.new(item, int(record_dict[item])))
-        print("++++dict: ", record_dict)
-        print("++++list: ", record_list)
+        #print("++++dict: ", record_dict)
+        #print("++++list: ", record_list)
         record_list.sort_custom(func(a, b): return a.score > b.score)
         record_list = record_list.slice(0, 100)
         for i in range(len(record_list)):
@@ -47,3 +50,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
     if Input.is_action_just_pressed("Pause"):
         get_tree().change_scene_to_file("res://Scenes/menu.tscn")
+
+
+func _on_button_pressed() -> void:
+    get_tree().change_scene_to_file("res://Scenes/menu.tscn")

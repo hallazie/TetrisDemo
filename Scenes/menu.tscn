@@ -46,6 +46,7 @@ theme_override_constants/separation = 16
 
 [node name="Welcome" type="Label" parent="Control/PanelContainer/MarginContainer/Control/VBoxContainer"]
 layout_mode = 2
+autowrap_mode = 3
 
 [node name="Play" type="Button" parent="Control/PanelContainer/MarginContainer/Control/VBoxContainer"]
 custom_minimum_size = Vector2(284, 52)

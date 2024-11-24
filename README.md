@@ -1,9 +1,21 @@
-## ETH RELATED
+# Getting Started
 
-在 `Scripts/eth_tool.gd` 中，以下方法替换或补全为调用abi：
+This is a simple Tetris Demo that applied with a Block Chain (Optimium) based Leaderboard.
 
-* check_username_available: 检查用户名是否已经被占用，用于进行唯一的全局排名
+In this demo, all the score you submit will stored in a OP contract, and holding a global leaderboard of the Tetris game.
 
-* sync_leaderboard: 从链上同步战绩，只返回前100名
+The communication with OP network is based on the Godot module https://github.com/qingfengzxr/gdscript-web3
 
-* update_user_score: 将用户的最高分数同步到链上
+## Login & Logout
+
+You can create a account for the leaderboard by login with Username and your OP PrivateKey.
+
+The PrivateKey will only stored at local for communicating with the contract. You can delete the stored PrivateKey anytime by logout.
+
+## Play
+
+You can play Tetris either you have login or not. You will be able to submit your score to OP contract once you login.
+
+## Leaderboard
+
+pass
