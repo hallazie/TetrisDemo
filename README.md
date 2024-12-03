@@ -8,7 +8,15 @@ In this demo, all the score you submit will stored in a OP contract, and holding
 
 You can create a account for the leaderboard by login with Username and your OP PrivateKey.
 
-The PrivateKey will only stored at local for communicating with the contract. You can delete the stored PrivateKey anytime by logout.
+The PrivateKey will only stored at local for communicating with the contract. You can delete the stored PrivateKey anytime by logout. The data is stored at Godot's default userdata path (user://). 
+
+```
+Windows: %APPDATA%\Godot\app_userdata\[project_name]
+macOS: ~/Library/Application Support/Godot/app_userdata/[project_name]
+Linux: ~/.local/share/godot/app_userdata/[project_name]
+```
+
+To get more detail of local userdata storage please refer to https://docs.godotengine.org/en/stable/tutorials/io/data_paths.html
 
 ## Play
 
