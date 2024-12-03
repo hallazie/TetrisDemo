@@ -1,6 +1,6 @@
 # Getting Started
 
-This is a simple Tetris Demo that applied with a fully on-chain leaderboard, showcasing the ability to develope Fully on-chain game with Godot Engine, with our custom module https://github.com/qingfengzxr/gdscript-web3 for GDScript.
+This is a simple Tetris Demo that applied with a leaderboard stored on block chain, showcasing the ability to develope fully on-chain game with Godot Engine, with our custom module https://github.com/qingfengzxr/gdscript-web3 for GDScript.
 
 In this demo, all the score you submit will stored in a OP contract, and holding a global leaderboard of the Tetris game.
 
