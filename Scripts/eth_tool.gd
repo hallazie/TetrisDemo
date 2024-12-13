@@ -75,7 +75,7 @@ func upload_score(username, score, prikey):
     return tx_hash
 
 # 上传用户成绩，对应智能合约中的 uploadScore 函数
-# 第二种实现方式，使用 signed_transaction 函数。更加简洁。
+# 第二种实现方式，使用 sign_transaction 函数。更加简洁。
 func upload_score2(username, score, prikey):
     # create a new instance of the ABIHelper class and unmarshal the ABI JSON string into it
     var h = ABIHelper.new()
@@ -100,7 +100,7 @@ func upload_score2(username, score, prikey):
         "to": CONTRACT_ADDRESS,
         "data": packed,
     }
-    var signed_tx_data = op.signed_transaction(transaction)
+    var signed_tx_data = op.sign_transaction(transaction)
     var rpc_result = op.send_transaction(signed_tx_data)
     print("rpc_result: ", rpc_result)
     # example rpc_result:  { "success": true, "errmsg": "", "txhash": "0xe3b18398db6371a47c1795f4a09ab412ddeceaa29ffda3d5dbae514a99e6caed" }
